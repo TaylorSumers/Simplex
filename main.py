@@ -4,7 +4,7 @@ print("Введите количество переменных")
 m = int(input())
 print("Введите количество уравнений")
 n = int(input())
-'''
+
 A = [0] * (n+1)
 for i in range(n+1):
     A[i] = [0] * (m+1)
@@ -24,26 +24,73 @@ print("Ввод свободных членов")
 for i in range(n+1):
     print("b{}=".format(i+1), end='')
     A[i][m] = float(input())
-'''
-A = [[1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 6.0], [0.0, 1.0, 2.0, 0.0, 1.0, 0.0, 5.0], [2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 3.0], [-5.0, -6.0, 3.0, 0.0, 0.0, 0.0, 0.0]]
+
+#A = [[1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 6.0], [0.0, 1.0, 2.0, 0.0, 1.0, 0.0, 5.0], [2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 3.0], [-5.0, -6.0, 3.0, 0.0, 0.0, 0.0, 0.0]]
 isOptimal=False
 while isOptimal!=True:
+
+    BiIsPos = True
+    for i in range(n):
+        if A[i][m] < 0:
+            BiIsPos = False
+
+    CjIsPos = True
+    for j in range(m):
+        if A[n][j] < 0:
+            CjIsPos = False
+
     rCol=0
-    maxEl = 0
-    for j in range (m):
-        if A[n][j]<0 and abs(A[n][j])>maxEl:
-            maxEl = abs(A[n][j])
-            rCol = j
-
     rRow = 0
-    minEl = 1000
-    for i in range (n):
-        if A[i][rCol]>0 and (A[i][m]/A[i][rCol])<minEl:
-            minEl = A[i][m]/A[i][rCol]
-            rRow = i
+    rEl = 0
+    if BiIsPos == True and CjIsPos == False:
+        print("ИСПОЛЬЗУЕТСЯ ОСНОВНОЙ СИМПЛЕКС-МЕТОД")
+        maxEl = 0
+        for j in range (m):
+            if A[n][j]<0 and abs(A[n][j])>maxEl:
+                maxEl = abs(A[n][j])
+                rCol = j
 
-    rEl = A[rRow][rCol]
-    print(rEl, rCol, rRow)
+        minEl = 1000
+        for i in range (n):
+            if A[i][rCol]>0 and (A[i][m]/A[i][rCol])<minEl:
+                minEl = A[i][m]/A[i][rCol]
+                rRow = i
+
+        rEl = A[rRow][rCol]
+        print(rEl, rCol, rRow)
+
+    elif CjIsPos == True and BiIsPos == False:
+        print("ИСПОЛЬЗУЕТСЯ ДВОЙСТВЕННЫЙ СИМПЛЕКС-МЕТОД")
+        maxEl = 0
+        for i in range (n):
+            if A[i][m]<0 and abs(A[i][m])>maxEl:
+                maxEl = abs(A[i][m])
+                rRow = i
+
+        minEl = 1000
+        for j in range (m):
+            if A[rRow][j]<0 and abs(A[n][j]/A[rRow][j])<minEl:
+                minEl = abs(A[n][j]/A[rRow][j])
+                rCol = j
+        rEl = A[rRow][rCol]
+        print(rEl, rCol, rRow)
+
+    elif CjIsPos == False and BiIsPos == False:
+        print("ИСПОЛЬЗУЕТСЯ СМЕШАННЫЙ СИПЛЕКС-МЕТОД")
+        maxEl = 0
+        for j in range(m):
+            if A[n][j] < 0 and abs(A[n][j]) > maxEl:
+                maxEl = abs(A[n][j])
+                rCol = j
+
+        minEl = 1000
+        for i in range(n):
+            if A[i][rCol] > 0 and A[i][m]>=0 and (A[i][m] / A[i][rCol]) < minEl:
+                minEl = A[i][m] / A[i][rCol]
+                rRow = i
+
+        rEl = A[rRow][rCol]
+        print(rEl, rCol, rRow)
 
     NewA = [None] * (n + 1)
     for i in range(n + 1):
