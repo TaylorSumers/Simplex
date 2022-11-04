@@ -68,6 +68,7 @@ def Calculating(a):
             A[i][j] = float(TIs[i*(m+1)+j].text)
     A.reverse()
 
+    # Список базисных переменных
     BasisVars = []
     for i in range(m-n+1, m+1):
         BasisVars.append(i)
